@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India - Food Ordering</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body id="top">
+    <header>
+        <div class="container">
+            <h1>India Restaurant</h1>
+            <nav>
+                <ul>
+                    <li><a href="#top"><button><span class="box">Home</span></button></a></li>
+                    <li><a href="#menu"><button><span class="box">Menu</span></button></a></li>
+                    <li><a href="cart.html"><button><span class="box">Cart</span></button></a></li>
+                    <li><a href="#about-us"><button><span class="box">About us</span></button></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="menu" class="container">
+            <h2>Our Menu</h2>
+            <div class="menu" id="menu-items">
+                <!-- Food items will be inserted here by JavaScript -->
+            </div>
+        </section>
+        <section class="cart_container">
+            <a href="cart.html"><button><span class="cart">View your cart</span></button></a>
+        </section>
+    </main>
+
+    <section id="about-us" class="about-us">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>Welcome to India Restaurant! We bring you the authentic flavors of Indian cuisine right to your table. Our menu is crafted with traditional recipes and high-quality ingredients to provide you with a memorable dining experience. Whether you're craving spicy curries, aromatic biryanis, or delectable desserts, we have something to satisfy every palate. Thank you for choosing India Restaurant!</p>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/food-items')
+                .then(response => response.json())
+                .then(data => {
+                    const menuItemsContainer = document.getElementById('menu-items');
+                    data.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'food-item';
+                        itemElement.innerHTML = `
+                            <img src="${item.image_url}" alt="${item.name}">
+                            <div class="food-details">
+                                <h3>${item.name}</h3>
+                                <p>Rs.${item.price.toFixed(2)}</p>
+                                <button onclick="addToCart(${item.id}, '${item.name}', ${item.price})">Add to Cart</button>
+                            </div>
+                        `;
+                        menuItemsContainer.appendChild(itemElement);
+                    });
+                })
+                .catch(error => console.error('Error fetching food items:', error));
+        });
+
+        function addToCart(id, name, price) {
+            // Add to cart logic (e.g., save to local storage or send to server)
+            console.log(`Added ${name} to cart`);
+
+            // Example: Posting to the server
+            fetch('/api/cart-items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: 1, // For demonstration, using a static user ID
+                    food_id: id,
+                    quantity: 1 // Example quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data.message))
+            .catch(error => console.error('Error adding item to cart:', error));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India - Cart</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="CSS/cart-style.css"> <!-- Link to cart-style.css -->
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>India Restaurant</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html"><button><span class="box">Home</span></button></a></li>
+                    <li><a href="#cart-container"><button><span class="box">Cart</span></button></a></li>
+                    <li><a href="#about-us"><button><span class="box">About us</span></button></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="cart-container">
+            <h2>Your Cart</h2>
+            <div class="cart-items" id="cart-items">
+                <!-- Cart items will be inserted here by JavaScript -->
+            </div>
+
+            <div class="total-price" id="total-price">Total: Rs.0.00</div>
+
+            <div class="checkout-form">
+                <form>
+                    <div class="user-box">
+                        <input type="text" name="name" required>
+                        <label>Name</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="text" name="mobile" required>
+                        <label>Mobile Number</label>
+                    </div>
+                    <div class="user-box">
+                        <input type="text" name="address" required>
+                        <label>Address</label>
+                    </div>
+                    <a href="#">Checkout</a>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <section id="about-us" class="about-us">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>Welcome to India Restaurant! We bring you the authentic flavors of Indian cuisine right to your table. Our menu is crafted with traditional recipes and high-quality ingredients to provide you with a memorable dining experience. Whether you're craving spicy curries, aromatic biryanis, or delectable desserts, we have something to satisfy every palate. Thank you for choosing India Restaurant!</p>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/cart-items')
+                .then(response => response.json())
+                .then(data => {
+                    const cartItemsContainer = document.getElementById('cart-items');
+                    let totalPrice = 0;
+
+                    data.forEach(item => {
+                        totalPrice += item.price * item.quantity;
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'cart-item';
+                        itemElement.innerHTML = `
+                            <img src="${item.image_url}" alt="${item.name}">
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">Rs.${item.price} x ${item.quantity}</div>
+                            </div>
+                            <div class="cart-item-price">Rs.${(item.price * item.quantity).toFixed(2)}</div>
+                        `;
+                        cartItemsContainer.appendChild(itemElement);
+                    });
+
+                    document.getElementById('total-price').textContent = `Total: Rs.${totalPrice.toFixed(2)}`;
+                })
+                .catch(error => console.error('Error fetching cart items:', error));
+        });
+    </script>
+</body>
+</html>

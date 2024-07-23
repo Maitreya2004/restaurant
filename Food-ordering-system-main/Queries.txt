@@ -1,0 +1,43 @@
+CREATE DATABASE IF NOT EXISTS food_ordering_db;
+
+USE food_ordering_db;
+
+CREATE TABLE IF NOT EXISTS food_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    image_url VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (item_id) REFERENCES food_items(id)
+);
+
+INSERT INTO food_items (name, price, image_url) VALUES
+('Chicken Biryani', 150, 'biryani.jpg'),
+('Paneer Tikka', 180, 'paneer-tikka.jpg'),
+('Butter Chicken', 200, 'butter-chicken.jpg'),
+('Garlic Naan', 250, 'naan.jpg');
+
+CREATE TABLE food_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    image_url VARCHAR(255)
+);
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT, -- Optional: if you have user management
+    food_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (food_id) REFERENCES food_items(id)
+);
+INSERT INTO food_items (name, description, price, image_url) VALUES
+('Chicken Biryani', 'A spicy and flavorful rice dish with chicken.', 150.00, 'biryani.jpg'),
+('Paneer Tikka', 'Grilled paneer marinated in spices.', 180.00, 'paneer-tikka.jpg'),
+('Butter Chicken', 'Rich and creamy chicken curry.', 200.00, 'butter-chicken.jpg'),
+('Garlic Naan', 'Soft and fluffy naan bread with garlic.', 250.00, 'naan.jpg');
